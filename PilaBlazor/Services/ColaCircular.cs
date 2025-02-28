@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace PilaBlazor.Services
+﻿namespace PilaBlazor.Services
 {
     public class ColaCircular
     {
@@ -47,19 +45,12 @@ namespace PilaBlazor.Services
             if (ColaVacia())
             {
                 Console.WriteLine("La cola está vacía.");
-                final = 0;
-                frente = 0;
                 return;
             }
-            
-            
 
-            cola[frente] = null;
+            cola[frente] = null; // Marcar como vacío
             frente = (frente + 1) % max;
             contador--;
         }
-
     }
 }
-
-

@@ -1,40 +1,37 @@
 ﻿@page "/"
 @using PilaBlazor.Services
 
-<PageTitle>Home</PageTitle>
-
+<PageTitle>Cola Circular</PageTitle>
 
 <h1>Cola Circular</h1>
 
 <div class="row">
     <div class="col-6">
-        <input type="text" class="form-control" @bind="valor" />
+        <input type="text" class="form-control" @bind="valor" placeholder="Ingrese un elemento" />
     </div>
     <div class="col-3 form-group">
         <button class="btn btn-primary" @onclick="Push">Push</button>
         <button class="btn btn-danger" @onclick="Pop">Pop</button>
     </div>
-
-    <br>
-    <br>
-    <h3>Elementos</h3>
-    <br>
-    <div class="contenedor-circulos">
-        
-                @for (int i = 0; i < MyStack.cola.Length; i++)
-                {
-                        <div class="circulos">@MyStack.cola[i]</div>
-                }
-    </div>
 </div>
 
+<br>
+<br>
 
+<h3>Elementos en la cola:</h3>
+<p>Estado: @estadoCola</p>
+
+<div class="contenedor-circulos">
+    @for (int i = 0; i < MyStack.cola.Length; i++)
+    {
+        <div class="circulos">@(MyStack.cola[i] ?? "-")</div> <!-- Mostrar "-" para espacios vacíos -->
+    }
+</div>
 
 @code {
-
     public ColaCircular MyStack { get; set; }
-
-    string valor;
+    private string valor;
+    private string estadoCola = "La cola está vacía"; // Estado inicial
 
     protected override void OnInitialized()
     {
@@ -44,15 +41,44 @@
 
     private void Push()
     {
-        if (valor == "") return;
+        if (string.IsNullOrWhiteSpace(valor)) return;
+
+        if (MyStack.ColaLlena())
+        {
+            estadoCola = "La cola está llena";
+            return;
+        }
 
         MyStack.Insertar(valor);
         valor = "";
+        UpdateEstadoCola();
     }
 
     private void Pop()
     {
+        if (MyStack.ColaVacia())
+        {
+            estadoCola = "La cola está vacía";
+            return;
+        }
+
         MyStack.Eliminar();
+        UpdateEstadoCola();
     }
 
+    private void UpdateEstadoCola()
+    {
+        if (MyStack.ColaVacia())
+        {
+            estadoCola = "La cola está vacía";
+        }
+        else if (MyStack.ColaLlena())
+        {
+            estadoCola = "La cola está llena";
+        }
+        else
+        {
+            estadoCola = "La cola tiene espacio disponible";
+        }
+    }
 }
